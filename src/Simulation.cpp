@@ -261,9 +261,18 @@ void Simulation::main() {
 						double pressure = pressureField[i*width + j];
 						globalPressure[(gYOffset + i)*sizeX + (gXOffset + j)] = pressure;
 						double norm = 0.5*std::max(-1.0, std::min(1.0, pressure*80.0)) + 0.5;
-						int r = static_cast<int>((norm <= 0.5) ? round(255.0*(1.0 - 2.0*norm)) : 0);
-						int g = static_cast<int>((norm <= 0.5) ? round(255.0*2.0*norm) : round(255.0*2.0*(1.0 - norm)));
-						int b = static_cast<int>((norm >= 0.5) ? round(255.0*2.0*(norm - 0.5)) : 0);
+						int r, g, b;
+						if (norm >= 0.5)
+						{
+							r = static_cast<int> (255 - round(255.0*2.0*(norm - 0.5)));
+							g = static_cast<int> (255 - round(255.0*2.0*(norm - 0.5)));
+							b = 255;
+						}
+						else {
+							r = 255;
+							g = static_cast<int> (255 - round(255.0*(1.0 - 2.0*norm)));
+							b = static_cast<int> (255 - round(255.0*(1.0 - 2.0*norm)));
+						}
 						pixels[(gYOffset+i)*sizeX + (gXOffset+j)] = SDL_MapRGBA(fmt, 255, r, g, b);
 					}
 				}
